@@ -2,16 +2,13 @@
 import React, { useState } from "react";
 
 const ImageUploader = () => {
-  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [uploadedImages, setUploadedImages] = useState([]);
+  const [_, setNewUrl] = useState(null);
 
-  const imageUploadHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files) {
-      const newImages = Array.from(files).map((file) =>
-        URL.createObjectURL(file)
-      );
-      setUploadedImages((prevImages) => [...prevImages, ...newImages]);
-    }
+  const imageUploadHandler = (e: any) => {
+    const newImage = URL.createObjectURL(e.target.files[0]);
+    setNewUrl(newImage as any);
+    setUploadedImages([...uploadedImages, newImage] as any);
   };
 
   return (

@@ -35,7 +35,7 @@ const Dashboard = () => {
     <div className="flex min-h-screen w-full pl-[300px] relative max-lg:px-5">
       <div
         className={`flex flex-col py-10 px-5 max-lg:z-10 bg-black text-white w-[300px] fixed top-0 left-0 min-h-screen justify-between duration-300 ease-linear transition-all ${
-          value ? "max-lg:left-0" : "max-lg:-left-full max-lg:translate-x-full"
+          value ? "max-lg:left-0" : "max-lg:-left-full"
         }`}
       >
         <div className="flex flex-col gap-2">
@@ -58,16 +58,20 @@ const Dashboard = () => {
         </div>
         <button
           onClick={handleLogout}
-          className="bg-red-500 py-2 px-3 rounded-lg text-white"
+          className="bg-red-500 py-2 px-3 rounded-lg text-white border border-transparent hover:text-red-500 hover:bg-white hover:border-red-500 duration-300 ease-linear"
         >
           Logout
         </button>
       </div>
       <div className="w-full pt-20">
         <div className="bg-orange-500 py-5 px-3 w-full fixed top-0 max-lg:left-0 max-lg:pt-8">
-          <h1 className="text-white font-semibold font-inter text-2xl">
-            Welcome to my Dashboard
-          </h1>
+          <h2 className="text-white font-semibold font-inter text-2xl">
+            {page === "page-1"
+              ? "Displayed text"
+              : page === "page-2"
+              ? "Calendly"
+              : "Upload Image"}
+          </h2>
         </div>
         {page === "page-1" ? (
           <DisplayText />

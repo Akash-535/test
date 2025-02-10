@@ -3,9 +3,13 @@ import React from "react";
 
 const DisplayText = () => {
   return (
-    <div className="flex justify-center items-center pt-20">
-      <h3>{Question[0].list.data[0].title}</h3>
-      <p>{Question[0].list.data[0].options[0]}</p>
+    <div className="text-center pt-20">
+      <p className="text-2xl font-bold">
+        Displayed text from map without any method
+      </p>
+      <p className="pt-6 text-lg font-medium">
+        {Question[0].list.data[0].title} {Question[0].list.data[0].options[0]}
+      </p>
     </div>
   );
 };
