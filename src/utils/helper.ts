@@ -10,3 +10,5 @@ export const Question = [
       },
     },
   ];
+
+  export const PAGE_LIST = ["Page 1", "Page 2", "Page 3"];

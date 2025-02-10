@@ -18,10 +18,7 @@ const Calanderly = () => {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-      <h1 className="text-3xl font-bold text-gray-800 mb-4">Search Page</h1>
-      <p className="text-xl text-gray-600 mb-8">
-        Search term: <span className="font-semibold">{search}</span>
-      </p>
+      <p className="text-xl text-gray-600 mb-8">Calendly</p>
       <div
         className="calendly-inline-widget w-full sm:w-[500px] h-[650px] border rounded-lg shadow-lg"
         data-url="https://calendly.com/akashbish9e/30min"
