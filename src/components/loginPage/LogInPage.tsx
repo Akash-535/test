@@ -1,9 +1,10 @@
 "use client";
 import { GoogleIcon, PageLogoIcon } from "@/utils/Icons";
-import React, { SyntheticEvent, useEffect, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import pageImage from "../../public/assets/images/lyriesweb-image.webp";
+import pageImage from "../../../public/assets/images/lyriesweb-image.webp";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const LogInPage = () => {
   const logInData = {
@@ -12,14 +13,25 @@ const LogInPage = () => {
   };
   const [value, setValue] = useState(logInData);
   const [error, setError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const router = useRouter();
 
-  const pageInfoHandler = (e: SyntheticEvent) => {
+  const pageInfoHandler = (e: any) => {
     e.preventDefault();
     setError(true);
-    if (value.email && value.password) {
+    if (
+      value.email &&
+      value.password &&
+      value.password.length >= 6 &&
+      !passwordError
+    ) {
       setError(false);
+      setPasswordError(false);
       setValue(logInData);
       localStorage.setItem("isAuthenticated", "true");
+      router.push("/dashboard");
+    } else if (value.password.length < 6) {
+      setPasswordError(true);
     }
   };
 
@@ -37,7 +49,7 @@ const LogInPage = () => {
             <p className="text-sm font-normal leading-[30px] text-light-gray pl-0.5">
               Welcome back! Please enter your details.
             </p>
-            <form className="pt-8">
+            <form onSubmit={pageInfoHandler} className="pt-8">
               <div className="pb-0.5">
                 <p className="pb-1.5 text-base leading-5 font-medium text-again-black">
                   Email
@@ -64,9 +76,12 @@ const LogInPage = () => {
                 </p>
                 <input
                   type="password"
-                  onChange={(e) =>
-                    setValue({ ...value, password: e.target.value })
-                  }
+                  onChange={(e) => {
+                    setValue({ ...value, password: e.target.value });
+                    if (e.target.value.length >= 6) {
+                      setPasswordError(false);
+                    }
+                  }}
                   value={value.password}
                   className={`placeholder:text-sm placeholder:leading-6 placeholder:font-medium text-light-gray text-sm leading-6 font-medium w-[456px] max-lg:w-[320px] py-[19px] px-3.5 border rounded-lg outline-none ${
                     error && !value.password
@@ -79,6 +94,11 @@ const LogInPage = () => {
                       : "Password"
                   }
                 />
+                {passwordError && (
+                  <p className="text-red-500 text-sm mt-1">
+                    Password must be at least 6 characters long
+                  </p>
+                )}
               </div>
               <div className="pt-[18px] flex justify-between max-w-[456px] max-md:flex-col max-md:gap-3.5">
                 <div className="flex gap-3 items-center">
@@ -102,7 +122,7 @@ const LogInPage = () => {
                 </Link>
               </div>
               <button
-                onClick={pageInfoHandler}
+                type="submit"
                 className="bg-again-black py-[8.5px] text-sm font-medium leading-6 text-white rounded-[9px] w-full max-w-[456px] mt-6 border border-transparent hover:text-black hover:bg-white hover:border-black duration-300 ease-linear max-md:mt-5"
               >
                 Sign In
