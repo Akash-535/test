@@ -3,12 +3,20 @@ import React, { useState } from "react";
 
 const ImageUploader = () => {
   const [uploadedImages, setUploadedImages] = useState([]);
-  const [_, setNewUrl] = useState(null);
 
   const imageUploadHandler = (e: any) => {
-    const newImage = URL.createObjectURL(e.target.files[0]);
-    setNewUrl(newImage as any);
+    const newImage: string = URL.createObjectURL(e.target.files[0]);
     setUploadedImages([...uploadedImages, newImage] as any);
+  };
+
+  const removeImageHandler = (index: number) => {
+    setUploadedImages((imgany) => imgany.filter((_, i) => i !== index));
+    const removeValue = document.getElementById(
+      "img-upload"
+    ) as HTMLInputElement;
+    if (removeValue) {
+      removeValue.value = "";
+    }
   };
 
   return (
@@ -16,6 +24,7 @@ const ImageUploader = () => {
       <input
         type="file"
         id="img-upload"
+        accept="image/*"
         hidden
         onChange={(e) => imageUploadHandler(e)}
         multiple
@@ -27,14 +36,25 @@ const ImageUploader = () => {
         Upload Images
       </label>
 
-      <div className="flex gap-4 mt-4">
+      <div className="flex gap-4 mt-8 flex-wrap">
         {uploadedImages.map((image, i) => (
-          <img
-            key={i}
-            className="size-[200px] rounded-lg object-cover"
-            src={image}
-            alt={`uploaded-img-${i}`}
-          />
+          <div key={i} className="relative size-[200px]">
+            <button
+              className={`w-full absolute top-1.5 -right-[38%] ${
+                uploadedImages ? "block" : "hidden"
+              }`}
+              onClick={() => removeImageHandler(i)}
+            >
+              ❌
+            </button>
+            <img
+              className={`size-[200px] rounded-lg object-cover ${
+                uploadedImages ? "block" : "hidden"
+              }`}
+              src={image}
+              alt="image"
+            />
+          </div>
         ))}
       </div>
     </div>

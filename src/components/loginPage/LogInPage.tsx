@@ -1,6 +1,6 @@
 "use client";
 import { GoogleIcon, PageLogoIcon } from "@/utils/Icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import pageImage from "../../../public/assets/images/lyriesweb-image.webp";
 import Link from "next/link";
@@ -15,6 +15,13 @@ const LogInPage = () => {
   const [error, setError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem("isAuthenticated");
+    if (isAuthenticated === "true") {
+      router.push("/dashboard");
+    }
+  }, [router]);
 
   const pageInfoHandler = (e: any) => {
     e.preventDefault();
@@ -34,15 +41,14 @@ const LogInPage = () => {
       setPasswordError(true);
     }
   };
-
   return (
-    <div className="min-h-screen flex justify-center items-center py-[30px] pr-7 max-lg:pt-8 max-lg:pb-24 max-lg:px-9">
-      <div className="flex w-full justify-end items-center gap-[120px] max-xl:justify-center 2xl:justify-center">
+    <div className="min-h-screen flex justify-center items-center py-[30px] pr-7 max-lg:pt-8 max-lg:pb-24 max-xl:px-9">
+      <div className="flex w-full justify-end items-center gap-[120px] max-lg:justify-center min-[1600px]:justify-center">
         <div className="max-w-[456px] flex justify-end flex-col max-lg:max-w-[320px] max-lg:mx-auto">
           <Link href="#">
             <PageLogoIcon />
           </Link>
-          <div className="pt-[138px] max-lg:pt-[90px]">
+          <div className="pt-[138px] max-xl:pt-[90px]">
             <h1 className="text-3xl font-semibold leading-[58px] text-light-black tracking-[1.22px]">
               Welcome Back
             </h1>
@@ -91,7 +97,7 @@ const LogInPage = () => {
                   placeholder={
                     error && !value.password
                       ? "Password is required"
-                      : "Password"
+                      : "••••••••"
                   }
                 />
                 {passwordError && (
@@ -100,7 +106,7 @@ const LogInPage = () => {
                   </p>
                 )}
               </div>
-              <div className="pt-[18px] flex justify-between max-w-[456px] max-md:flex-col max-md:gap-3.5">
+              <div className="pt-[18px] flex justify-between max-w-[456px] flex-wrap max-md:gap-3.5">
                 <div className="flex gap-3 items-center">
                   <input
                     id="checkBox"
@@ -140,8 +146,14 @@ const LogInPage = () => {
             </p>
           </div>
         </div>
-        <div className="w-6/12 max-xl:hidden max-w-[759px] bg-custom-blue min-h-[899px] flex items-center justify-center rounded-[20px]">
-          <Image width={617} height={541} src={pageImage} alt="" />
+        <div className="w-6/12 max-lg:hidden max-w-[759px] bg-custom-blue min-h-[899px] max-xl:min-h-[570px] flex items-center justify-center rounded-[20px]">
+          <Image
+            width={617}
+            height={541}
+            className="max-xl:w-[250px] max-xl:h-auto pointer-events-none"
+            src={pageImage}
+            alt=""
+          />
         </div>
       </div>
     </div>

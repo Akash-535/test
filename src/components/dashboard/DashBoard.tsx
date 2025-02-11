@@ -70,7 +70,9 @@ const Dashboard = () => {
               ? "Displayed text"
               : page === "page-2"
               ? "Calendly"
-              : "Upload Image"}
+              : page === "page-3"
+              ? "Upload Image"
+              : "Welcome To My Dashboard"}
           </h2>
         </div>
         {page === "page-1" ? (
