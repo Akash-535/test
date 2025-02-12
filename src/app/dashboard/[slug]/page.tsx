@@ -1,16 +1,16 @@
 "use client";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import ImageUploader from "@/components/dashboard/ImageUploader";
 import Link from "next/link";
-import Calanderly from "./Calenderly";
 import { PAGE_LIST } from "@/utils/helper";
-import DisplayText from "./DisplayText";
+import DisplayText from "@/components/dashboard/DisplayText";
+import Calanderly from "@/components/dashboard/Calenderly";
+import ImageUploader from "@/components/dashboard/ImageUploader";
 
 const Dashboard = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const page = searchParams.get("page");
+  const param = useParams();
+  const { slug } = param;
 
   const handleLogout = () => {
     localStorage.removeItem("isAuthenticated");
@@ -44,11 +44,11 @@ const Dashboard = () => {
           </h1>
           {PAGE_LIST.map((obj, i) => (
             <Link
-              href={`/dashboard?page=${obj.toLowerCase().replace(" ", "-")}`}
+              href={`/dashboard/${obj.toLowerCase().replace(" ", "-")}`}
               onClick={() => handleButtonClick(i)}
               key={i}
               className={`${
-                page === obj.toLowerCase().replace(" ", "-") &&
+                slug === obj.toLowerCase().replace(" ", "-") &&
                 "bg-white text-black"
               } py-2 px-3 rounded-lg cursor-pointer hover:bg-white/50 transition-all duration-300 hover:text-black`}
             >
@@ -66,20 +66,20 @@ const Dashboard = () => {
       <div className="w-full pt-20">
         <div className="bg-orange-500 py-5 px-3 w-full fixed top-0 max-lg:left-0 max-lg:pt-8">
           <h2 className="text-white font-semibold font-inter text-2xl">
-            {page === "page-1"
+            {slug === "page-1"
               ? "Displayed text"
-              : page === "page-2"
+              : slug === "page-2"
               ? "Calendly"
-              : page === "page-3"
+              : slug === "page-3"
               ? "Upload Image"
               : "Welcome To My Dashboard"}
           </h2>
         </div>
-        {page === "page-1" ? (
+        {slug === "page-1" ? (
           <DisplayText />
-        ) : page === "page-2" ? (
+        ) : slug === "page-2" ? (
           <Calanderly />
-        ) : page === "page-3" ? (
+        ) : slug === "page-3" ? (
           <ImageUploader />
         ) : null}
       </div>

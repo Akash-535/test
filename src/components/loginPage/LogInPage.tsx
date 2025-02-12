@@ -1,22 +1,22 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { GoogleIcon, PageLogoIcon } from "@/utils/Icons";
-import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import pageImage from "../../../public/assets/images/lyriesweb-image.webp";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const LogInPage = () => {
   const logInData = {
     email: "",
     password: "",
   };
-
   const [value, setValue] = useState(logInData);
   const [error, setError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [emailError, setEmailError] = useState(false);
+
   const router = useRouter();
+
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem("isAuthenticated");
@@ -25,39 +25,25 @@ const LogInPage = () => {
     }
   }, [router]);
 
-  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-
   const pageInfoHandler = (e: any) => {
     e.preventDefault();
     setError(true);
-
-    if (value.password.length < 6) {
-      setPasswordError(true);
-    } else {
-      setPasswordError(false);
-    }
-
     if (
       value.email &&
-      emailRegex.test(value.email) &&
       value.password &&
       value.password.length >= 6 &&
-      !passwordError &&
-      !emailError
+      emailRegex.test(value.email)
     ) {
       setError(false);
-      setPasswordError(false);
-      setEmailError(false);
       setValue(logInData);
       localStorage.setItem("isAuthenticated", "true");
       router.push("/dashboard");
     }
   };
-
   return (
     <div className="min-h-screen flex justify-center items-center py-[30px] pr-7 max-lg:pt-8 max-lg:pb-24 max-xl:px-9">
-      <div className="flex w-full justify-end items-center gap-[120px] max-lg:justify-center min-[1600px]:justify-center">
-        <div className="max-w-[456px] flex justify-end flex-col max-lg:max-w-[320px] max-lg:mx-auto">
+      <div className="flex w-full justify-end items-start gap-[120px] max-lg:justify-center min-[1600px]:justify-center">
+        <div className="max-w-[456px] flex justify-end flex-col max-lg:max-w-[320px] max-lg:mx-auto xl:pt-1">
           <Link href="#">
             <PageLogoIcon />
           </Link>
@@ -75,31 +61,24 @@ const LogInPage = () => {
                 </p>
                 <input
                   type="email"
-                  onChange={(e) => {
-                    setValue({ ...value, email: e.target.value });
-                    if (emailRegex.test(e.target.value)) {
-                      setEmailError(false);
-                    } else {
-                      setEmailError(true);
-                    }
-                  }}
+                  onChange={(e) =>
+                    setValue({ ...value, email: e.target.value })
+                  }
                   value={value.email}
-                  className={`placeholder:text-sm placeholder:text-light-gray placeholder:leading-6 placeholder:font-medium text-light-gray text-sm leading-6 font-medium w-[456px] py-[19px] max-lg:w-[320px] px-3.5 border rounded-lg outline-none ${
+                  className={`placeholder:text-sm placeholder:leading-6 placeholder:font-medium text-light-gray text-sm leading-6 font-medium w-[456px] py-[19px] max-lg:w-[320px] px-3.5 border rounded-lg outline-none ${
                     error && !value.email
-                      ? "border-red-500"
-                      : emailError
-                      ? "border-red-500"
-                      : "border-light-white"
+                      ? "placeholder:text-red-500 border-red-500"
+                      : "placeholder:text-light-gray border-light-white"
                   }`}
-                  placeholder="Email"
+                  placeholder={
+                    error && !value.email ? "Email is required" : "Email"
+                  }
                 />
-                <p className="text-red-500 text-sm my-1">
-                  {error && !value.email
-                    ? "Please enter your email"
-                    : emailError
-                    ? "Please check @ and . in your email"
-                    : ""}
-                </p>
+                {error &&
+                  !emailRegex.test(value.email) &&
+                  value.email.length > 0 && (
+                    <p className="text-red-500 text-sm mt-1">Email not valid</p>
+                  )}
               </div>
               <div className="pt-4">
                 <p className="pb-1.5 text-base leading-5 font-medium text-again-black">
@@ -107,12 +86,9 @@ const LogInPage = () => {
                 </p>
                 <input
                   type="password"
-                  onChange={(e) => {
-                    setValue({ ...value, password: e.target.value });
-                    if (e.target.value.length >= 6) {
-                      setPasswordError(false);
-                    }
-                  }}
+                  onChange={(e) =>
+                    setValue({ ...value, password: e.target.value })
+                  }
                   value={value.password}
                   className={`placeholder:text-sm placeholder:leading-6 placeholder:font-medium text-light-gray text-sm leading-6 font-medium w-[456px] max-lg:w-[320px] py-[19px] px-3.5 border rounded-lg outline-none ${
                     error && !value.password
@@ -125,11 +101,13 @@ const LogInPage = () => {
                       : "••••••••"
                   }
                 />
-                {passwordError && (
-                  <p className="text-red-500 text-sm mt-1">
-                    Password must be at least 6 characters long
-                  </p>
-                )}
+                {error &&
+                  value.password.length > 0 &&
+                  value.password.length < 6 && (
+                    <p className="text-red-500 text-sm mt-1">
+                      Password must be at least 6 characters long
+                    </p>
+                  )}
               </div>
               <div className="pt-[18px] flex justify-between max-w-[456px] flex-wrap max-md:gap-3.5">
                 <div className="flex gap-3 items-center">
